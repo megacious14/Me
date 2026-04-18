@@ -14,7 +14,7 @@ html, body {
   color: white;
 }
 
-/* FULL BACKGROUND */
+/* BACKGROUND */
 body::before {
   content: "";
   position: fixed;
@@ -25,30 +25,35 @@ body::before {
   z-index: -1;
 }
 
-/* PAGES */
+/* PAGE */
 .container {
   position: absolute;
   width: 100%;
   height: 100%;
-  padding: 40px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  display: none;
   justify-content: center;
   align-items: center;
-  opacity: 0;
-  transition: opacity 0.8s ease;
+  flex-direction: column;
+  padding: 40px;
+  box-sizing: border-box;
 }
 
-.show { opacity: 1; }
+.show { display: flex; }
 
 /* TEXT */
-h1, h2, p {
-  text-shadow: 0 2px 10px black;
-}
-
+h1, h2, p { text-shadow: 0 2px 10px black; }
 h2 { font-size: 32px; }
-p { font-size: 22px; max-width: 800px; line-height: 1.8; }
+p { font-size: 22px; max-width: 800px; }
+
+/* BUTTON */
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
+}
 
 /* INPUT */
 input {
@@ -59,36 +64,7 @@ input {
   text-align: center;
 }
 
-/* TAP */
-.tap {
-  position: absolute;
-  bottom: 20px;
-  opacity: 0.6;
-}
-
-/* CURSOR */
-#cursor { animation: blink 1s infinite; }
-@keyframes blink { 50% {opacity:0;} }
-
-/* SHAKE */
-@keyframes shake {
-  25% {transform: translateX(-10px);}
-  50% {transform: translateX(10px);}
-  75% {transform: translateX(-10px);}
-}
-.shake { animation: shake 0.4s; }
-
-/* HEARTS */
-.heart {
-  position: fixed;
-  animation: float 6s linear infinite;
-}
-@keyframes float {
-  from {transform: translateY(100vh);}
-  to {transform: translateY(-10vh);}
-}
-
-/* SLIDESHOW */
+/* SLIDES */
 .slide {
   display: none;
   width: 320px;
@@ -97,6 +73,10 @@ input {
   border-radius: 20px;
 }
 .active { display: block; }
+
+/* CURSOR */
+#cursor { animation: blink 1s infinite; }
+@keyframes blink { 50% {opacity:0;} }
 </style>
 </head>
 
@@ -109,7 +89,7 @@ input {
 <!-- START -->
 <div class="container show" id="start">
   <h1>For You 🧸💗</h1>
-  <p class="tap">tap to begin</p>
+  <button onclick="start()">Start 💗</button>
 </div>
 
 <!-- CODE -->
@@ -122,15 +102,17 @@ input {
 <div class="container" id="countdown">
   <h2>We've been together for 💗</h2>
   <p id="time"></p>
+  <button onclick="goTo('message')">Next 💗</button>
 </div>
 
 <!-- MESSAGE -->
 <div class="container" id="message">
   <h2>💌</h2>
   <p id="typedText"></p>
+  <button onclick="goTo('gallery')">Next 💗</button>
 </div>
 
-<!-- SLIDESHOW -->
+<!-- GALLERY -->
 <div class="container" id="gallery">
   <h2>Us 💗</h2>
 
@@ -142,11 +124,14 @@ input {
   <img class="slide" src="IMG_3926.jpeg">
   <img class="slide" src="IMG_3927.jpeg">
   <img class="slide" src="IMG_3928.jpeg">
+
+  <button onclick="goTo('playlist')">Final 💗</button>
 </div>
 
 <!-- PLAYLIST -->
 <div class="container" id="playlist">
   <h2>Our Playlist 🎶</h2>
+
   <iframe style="border-radius:12px"
     src="https://open.spotify.com/embed/playlist/5pMJjbRnQiTY3k4cPpTSF2"
     width="90%" height="380"
@@ -158,45 +143,24 @@ input {
 <script>
 let current = "start";
 
-/* MUSIC */
-function playMusic() {
+/* START */
+function start() {
   let m = document.getElementById("music");
-  m.volume = 0;
   m.play();
-  let v = 0;
-  let fade = setInterval(() => {
-    if (v < 1) { v += 0.05; m.volume = v; }
-    else clearInterval(fade);
-  }, 200);
+  goTo("codeScreen");
 }
 
 /* NAV */
 function goTo(id) {
   document.getElementById(current).classList.remove("show");
-  setTimeout(() => {
-    document.getElementById(id).classList.add("show");
-    current = id;
+  document.getElementById(id).classList.add("show");
+  current = id;
 
-    if (id === "message") startTyping();
-    if (id === "gallery") startSlideshow();
-  }, 500);
+  if (id === "message") startTyping();
+  if (id === "gallery") startSlideshow();
 }
 
-/* ✅ FIX: IGNORE TAPS ON INPUT + SPOTIFY */
-document.body.addEventListener("click", (e) => {
-
-  if (e.target.tagName === "INPUT" || e.target.tagName === "IFRAME") return;
-
-  if (current === "start") {
-    playMusic();
-    goTo("codeScreen");
-  }
-  else if (current === "countdown") goTo("message");
-  else if (current === "message") goTo("gallery");
-  else if (current === "gallery") goTo("playlist");
-});
-
-/* PASSWORD (instant) */
+/* PASSWORD FIX */
 document.getElementById("codeInput").addEventListener("input", function() {
   let val = this.value.toLowerCase().trim();
   if (val === "18thmarch") {
@@ -206,9 +170,9 @@ document.getElementById("codeInput").addEventListener("input", function() {
 
 /* COUNTDOWN */
 let startDate = new Date("March 18, 2026");
-setInterval(() => {
-  let d = Math.floor((new Date() - startDate)/86400000);
-  document.getElementById("time").innerHTML = d + " days 💗";
+setInterval(()=>{
+  let d=Math.floor((new Date()-startDate)/86400000);
+  document.getElementById("time").innerHTML=d+" days 💗";
 },1000);
 
 /* TYPING */
@@ -218,30 +182,25 @@ but i love love you soooooo muchhhhhhh.
 I love when you’re happy, i love your eyes, 
 your smile, your laughter, i love your height, 
 i love every single thing about you. 
-i love how you feel sometimes feel 
-a bit awkward and you feel like i wouldn’t understand 
-you but it makes you the cutest honestly and i tell 
-you to not be shy🙃… i love how smart you are! and 
-i am going to love every single moment of yours, 
-your happy times as well as your sad times 
-but i pray and hope you’re happy all the time🥹🥹🥹💗… 
-i’m actually allowing myself to be loved and 
-i’m going to love you through and through!💗💗 
-you may not know but you make me really happy and 
-sometimes i think this is not real and 
-im going to love you always Nana Wiredu Gyan🥹💗 and 
-i know we’ll last forever 🙃🙃💗 
-It's so rare to find a someone like you, 
-somehow when you're around,the sky is always blue,
-the way we talk, the things you say the way 
-you make it all okay and how you know all of my jokes but  
-you laugh anyway… if I could wish for one thing 
-I'd take the smile that you bring
+i love how you feel sometimes feel a bit awkward 
+and you feel like i wouldn’t understand you but 
+it makes you the cutest honestly and 
+i tell you to not be shy🙃… i love how smart you are! 
+and i am going to love every single moment of yours, 
+your happy times as well as your sad times but i pray 
+and hope you’re happy all the time🥹🥹🥹💗… 
+i’m actually allowing myself to be loved and i’m going 
+to love you through and through!💗💗 you may not know 
+but you make me really happy and sometimes i think this 
+is not real and im going to love you always Nana Wiredu Gyan🥹💗 
+and i know we’ll last forever 🙃🙃💗 It's so rare to find a someone like you, 
+somehow when you're around,the sky is always blue,the way we talk, 
+the things you say the way you make it all okay and how you know all of my jokes 
+but  you laugh anyway… if I could wish for one thing I'd take the smile that you bring
 Wherever you go in this world I'll come along
 Together we dream the same dream
 Forever I'm here for you, you're here for me
 Happy One Month Anniversary!!💗`;
-
 let i=0;
 let sound=new Audio("typing.mp3");
 
@@ -266,23 +225,12 @@ function startTyping(){
 function startSlideshow(){
   let slides=document.querySelectorAll(".slide");
   let i=0;
-
   setInterval(()=>{
     slides.forEach(s=>s.classList.remove("active"));
     i=(i+1)%slides.length;
     slides[i].classList.add("active");
   },2000);
 }
-
-/* HEARTS */
-setInterval(()=>{
-  let h=document.createElement("div");
-  h.innerHTML="💗";
-  h.classList.add("heart");
-  h.style.left=Math.random()*100+"vw";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),6000);
-},500);
 </script>
 
 </body>
