@@ -226,14 +226,12 @@ document.body.addEventListener("click", () => {
     playMusic();
     goTo("codeScreen");
   }
-  else if (current === "codeScreen") {
-    if (document.getElementById("codeInput").value === "18thmarch") {
-      goTo("countdown");
-    } else {
-      document.body.classList.add("shake");
-      setTimeout(() => document.body.classList.remove("shake"), 400);
-    }
-  }
+  document.getElementById("codeInput").addEventListener("input", function() {
+  let value = this.value.toLowerCase().trim();
+
+  if (value === "18thmarch") {
+    goTo("countdown");
+});
   else if (current === "countdown") goTo("message");
   else if (current === "message") goTo("gallery");
   else if (current === "gallery") goTo("playlist");
