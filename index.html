@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You 🧸💗</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+}
+
+/* BACKGROUND IMAGE */
+body::before {
+  content: "";
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: url("IMG_3907.jpeg") no-repeat center/cover;
+  filter: blur(8px) brightness(0.4);
+  z-index: -1;
+}
+
+/* PAGES */
+.container {
+  padding: 40px;
+  opacity: 0;
+  transition: opacity 1s ease;
+}
+
+.show {
+  opacity: 1;
+}
+
+/* INPUT */
+input {
+  padding: 12px;
+  border-radius: 15px;
+  border: none;
+  text-align: center;
+}
+
+/* IMAGES */
+img {
+  width: 220px;
+  border-radius: 20px;
+  margin: 10px;
+}
+
+/* TAP TEXT */
+.tap {
+  position: fixed;
+  bottom: 20px;
+  width: 100%;
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+/* CURSOR */
+#cursor {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,100%{opacity:1;}
+  50%{opacity:0;}
+}
+
+/* GLOW EFFECT */
+.glow {
+  animation: glow 2s ease forwards;
+}
+
+@keyframes glow {
+  0% {text-shadow: none;}
+  100% {text-shadow: 0 0 20px pink;}
+}
+
+/* SHAKE */
+@keyframes shake {
+  0% {transform: translateX(0);}
+  25% {transform: translateX(-10px);}
+  50% {transform: translateX(10px);}
+  75% {transform: translateX(-10px);}
+  100% {transform: translateX(0);}
+}
+
+.shake {
+  animation: shake 0.4s;
+}
+
+/* HEARTS */
+.heart {
+  position: fixed;
+  animation: float 6s linear infinite;
+}
+
+@keyframes float {
+  from {transform: translateY(100vh);}
+  to {transform: translateY(-10vh);}
+}
+</style>
+</head>
+
+<body>
+
+<!-- MUSIC -->
+<audio id="music" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<div class="container show" id="start">
+  <h1>For You 🧸💗</h1>
+  <p class="tap">tap to begin</p>
+</div>
+
+<div class="container" id="codeScreen">
+  <h2>Enter our code 💗</h2>
+  <p style="opacity:0.6;">hint: when we started dating…</p>
+  <input type="password" id="codeInput">
+</div>
+
+<div class="container" id="countdown">
+  <h2>We've been together for 💗</h2>
+  <p id="time"></p>
+  <p class="tap">tap to continue</p>
+</div>
+
+<div class="container" id="message">
+  <h2>💌</h2>
+  <p id="typedText"></p>
+  <p class="tap" id="tapAfterMessage" style="display:none;">tap to continue</p>
+</div>
+
+<div class="container" id="gallery">
+  <h2>Us 💗</h2>
+  <img src="IMG_3908.jpeg">
+  <img src="IMG_3909.jpeg">
+  <img src="IMG_3910.jpeg">
+  <img src="IMG_3912.jpeg">
+  <img src="IMG_3913.jpeg">
+  <img src="IMG_3926.jpeg">
+  <img src="IMG_3927.jpeg">
+  <img src="IMG_3928.jpeg">
+  <p class="tap">tap for final surprise</p>
+</div>
+
+<div class="container" id="playlist">
+  <h2>Our Playlist 🎶</h2>
+
+  <iframe style="border-radius:12px"
+    src="https://open.spotify.com/embed/playlist/5pMJjbRnQiTY3k4cPpTSF2"
+    width="100%" height="380"
+    frameBorder="0"
+    allow="autoplay; encrypted-media">
+  </iframe>
+
+  <p class="glow">Forever us 💗</p>
+</div>
+
+<script>
+let current = "start";
+
+/* MUSIC FADE IN */
+function playMusic() {
+  let music = document.getElementById("music");
+  music.volume = 0;
+  music.play();
+
+  let vol = 0;
+  let fade = setInterval(() => {
+    if (vol < 1) {
+      vol += 0.05;
+      music.volume = vol;
+    } else clearInterval(fade);
+  }, 200);
+}
+
+/* NAVIGATION */
+function goTo(id) {
+  document.getElementById(current).classList.remove("show");
+
+  setTimeout(() => {
+    document.getElementById(id).classList.add("show");
+    current = id;
+
+    if (id === "message") startTyping();
+  }, 500);
+}
+
+/* TAP FLOW */
+document.body.addEventListener("click", () => {
+  if (current === "start") {
+    playMusic();
+    goTo("codeScreen");
+  }
+  else if (current === "countdown") goTo("message");
+  else if (current === "gallery") goTo("playlist");
+  else if (current === "message" && typingDone) goTo("gallery");
+});
+
+/* PASSWORD */
+document.getElementById("codeInput").addEventListener("keypress", function(e){
+  if (e.key === "Enter") {
+    if (this.value === "18thmarch") {
+      goTo("countdown");
+    } else {
+      document.body.classList.add("shake");
+      setTimeout(() => document.body.classList.remove("shake"), 400);
+    }
+  }
+});
+
+/* COUNTDOWN */
+let startDate = new Date("March 18, 2026");
+
+setInterval(() => {
+  let diff = new Date() - startDate;
+  let d = Math.floor(diff / 86400000);
+  let h = Math.floor((diff / 3600000) % 24);
+  let m = Math.floor((diff / 60000) % 60);
+
+  document.getElementById("time").innerHTML =
+    d + " days, " + h + " hrs, " + m + " mins 💗";
+}, 1000);
+
+/* TYPING EFFECT */
+const text = `Dear bear🧸💗,
+
+i really don’t know how to even start😭 but i love love you soooooo muchhhhhhh...
+
+you make me really happy and im going to love you always Nana Wiredu Gyan🥹💗
+
+Happy One Month Anniversary!!💗`;
+
+let i = 0;
+let typingDone = false;
+let sound = new Audio("typing.mp3");
+
+function startTyping() {
+  let el = document.getElementById("typedText");
+  let tap = document.getElementById("tapAfterMessage");
+
+  el.innerHTML = "";
+  i = 0;
+  typingDone = false;
+
+  function type() {
+    if (i < text.length) {
+      sound.currentTime = 0;
+      sound.play();
+
+      el.innerHTML = text.substring(0, i + 1) + '<span id="cursor">|</span>';
+      i++;
+      setTimeout(type, 15);
+    } else {
+      typingDone = true;
+      tap.style.display = "block";
+      el.classList.add("glow");
+    }
+  }
+
+  type();
+}
+
+/* HEARTS */
+setInterval(() => {
+  let h = document.createElement("div");
+  h.innerHTML = "💗";
+  h.classList.add("heart");
+  h.style.left = Math.random() * 100 + "vw";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 6000);
+}, 500);
+</script>
+
+</body>
+</html>
