@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>For You 🧸💗</title>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  color: white;
+  overflow: hidden;
+}
+
+/* BACKGROUND */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("IMG_3907.jpeg") center/cover no-repeat;
+  filter: blur(6px) brightness(0.35);
+  transform: scale(1.05);
+  z-index: -1;
+}
+
+/* PAGES + FADE SYSTEM */
+.container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  padding: 30px;
+  transition: opacity 1.2s ease;
+}
+
+.show {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* 🎬 INTRO SCREEN */
+#introScreen h1 {
+  font-size: 60px;
+  letter-spacing: 3px;
+  animation: introFade 3.5s ease forwards;
+}
+
+@keyframes introFade {
+  0% { opacity: 0; transform: scale(1.1); }
+  30% { opacity: 1; transform: scale(1); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: scale(0.98); }
+}
+
+/* TEXT */
+h1 {
+  font-size: 56px;
+  text-shadow: 0 2px 15px black;
+}
+
+h2 {
+  font-size: 44px;
+  text-shadow: 0 2px 15px black;
+}
+
+p {
+  font-size: 28px;
+  max-width: 800px;
+  line-height: 1.8;
+  text-shadow: 0 2px 10px black;
+}
+
+/* INPUT */
+input {
+  padding: 18px;
+  font-size: 22px;
+  border-radius: 14px;
+  border: none;
+  text-align: center;
+}
+
+/* BUTTON */
+button {
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* COUNTDOWN HEARTBEAT */
+#time {
+  font-size: 52px;
+  font-weight: bold;
+  animation: heartbeat 1.5s infinite;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.05); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* SLIDESHOW */
+.slide {
+  display: none;
+  width: 90vw;
+  max-width: 600px;
+  height: 600px;
+  object-fit: cover;
+  border-radius: 25px;
+  box-shadow: 0 10px 35px rgba(0,0,0,0.6);
+}
+
+.active {
+  display: block;
+}
+
+/* HEARTS */
+.heart {
+  position: fixed;
+  bottom: -20px;
+  font-size: 24px;
+  animation: floatUp 6s linear forwards;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-120vh); opacity: 0; }
+}
+
+/* FINAL SCREEN */
+#finalScreen h1 {
+  font-size: 72px;
+  animation: fadeIn 3s ease forwards;
+}
+
+#finalScreen p {
+  font-size: 26px;
+  opacity: 0;
+  animation: fadeIn 3s ease 1s forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="song.mp3" type="audio/mpeg">
+</audio>
+
+<!-- 🎬 INTRO -->
+<div class="container show" id="introScreen">
+  <h1>A STORY BY US 💗</h1>
+</div>
+
+<!-- START -->
+<div class="container" id="start">
+  <h1>For You 🧸💗</h1>
+  <button onclick="start()">Start 💗</button>
+</div>
+
+<!-- CODE -->
+<div class="container" id="codeScreen">
+  <h2>Enter our code 💗</h2>
+  <p style="opacity:0.7;">hint: when we started dating…</p>
+  <input type="password" id="codeInput">
+</div>
+
+<!-- COUNTDOWN -->
+<div class="container" id="countdown">
+  <h2>We've been together for 💗</h2>
+  <p id="time"></p>
+  <button onclick="goTo('message')">Next 💗</button>
+</div>
+
+<!-- MESSAGE -->
+<div class="container" id="message">
+  <h2>💌</h2>
+  <p id="typedText"></p>
+  <button onclick="goTo('gallery')">Next 💗</button>
+</div>
+
+<!-- GALLERY -->
+<div class="container" id="gallery">
+  <h2>Us 💗</h2>
+
+  <img class="slide active" src="IMG_3908.jpeg">
+  <img class="slide" src="IMG_3909.jpeg">
+  <img class="slide" src="IMG_3910.jpeg">
+  <img class="slide" src="IMG_3912.jpeg">
+  <img class="slide" src="IMG_3913.jpeg">
+  <img class="slide" src="IMG_3926.jpeg">
+  <img class="slide" src="IMG_3927.jpeg">
+  <img class="slide" src="IMG_3928.jpeg">
+
+  <button onclick="goTo('finalScreen')">Final 💗</button>
+</div>
+
+<!-- FINAL -->
+<div class="container" id="finalScreen">
+  <h1>I LOVE YOU 💗</h1>
+  <p>forever and always…</p>
+</div>
+
+<script>
+let current = "introScreen";
+
+/* FLOW START */
+window.onload = () => {
+  setTimeout(() => {
+    document.getElementById("introScreen").classList.remove("show");
+    document.getElementById("start").classList.add("show");
+    current = "start";
+  }, 3500);
+};
+
+/* MUSIC + START */
+function start() {
+  document.getElementById("music").play();
+  goTo("codeScreen");
+}
+
+/* FADE NAVIGATION */
+function goTo(id) {
+  document.getElementById(current).classList.remove("show");
+
+  setTimeout(() => {
+    document.getElementById(id).classList.add("show");
+    current = id;
+
+    if (id === "message") startTyping();
+    if (id === "gallery") startSlideshow();
+  }, 800);
+}
+
+/* PASSWORD */
+document.getElementById("codeInput").addEventListener("input", function() {
+  if (this.value.toLowerCase().trim() === "18thmarch") {
+    goTo("countdown");
+  }
+});
+
+/* COUNTDOWN */
+const startDate = new Date("March 18, 2026 00:00:00").getTime();
+
+setInterval(() => {
+  const now = new Date().getTime();
+  const distance = startDate - now;
+
+  const days = Math.floor(distance / (1000*60*60*24));
+  const hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+  const minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+  const seconds = Math.floor((distance%(1000*60))/1000);
+
+  document.getElementById("time").innerHTML =
+    days+"d "+hours+"h "+minutes+"m "+seconds+"s 💗";
+
+},1000);
+
+/* TYPING */
+const text = `Dear bear🧸💗,
+i really don’t know how to even start😭 
+but i love love you soooooo muchhhhhhh. 
+I love when you’re happy, i love your eyes, 
+your smile, your laughter, i love your height, 
+i love every single thing about you. 
+i love how you feel sometimes feel a bit awkward and 
+you feel like i wouldn’t understand you but it makes 
+you the cutest honestly and i tell you to not be shy🙃… 
+i love how smart you are! and i am going to love every 
+single moment of yours, your happy times as well as your sad 
+times but i pray and hope you’re happy all the time🥹🥹🥹💗… 
+i’m actually allowing myself to be loved and i’m going to love you 
+through and through!💗💗 you may not know but you make me really happy 
+and sometimes i think this is not real and im going to love you always Nana Wiredu Gyan🥹💗 
+and i know we’ll last forever 🙃🙃💗 It's so rare to find a someone like you, somehow when 
+you're around,the sky is always blue,the way we talk, the things you say the way you make it all 
+okay and how you know all of my jokes but  you laugh anyway… if I could wish for one thing 
+I'd take the smile that you bring
+Wherever you go in this world I'll come along
+Together we dream the same dream
+Forever I'm here for you, you're here for me
+Happy One Month Anniversary!!💗`;
+
+let i = 0;
+let sound = new Audio("typing.mp3");
+
+function startTyping() {
+  let el = document.getElementById("typedText");
+  el.innerHTML = "";
+  i = 0;
+
+  function type() {
+    if (i < text.length) {
+      sound.currentTime = 0;
+      sound.play();
+      el.innerHTML = text.substring(0,i+1);
+      i++;
+      setTimeout(type, 15);
+    }
+  }
+  type();
+}
+
+/* SLIDESHOW */
+function startSlideshow() {
+  let slides = document.querySelectorAll(".slide");
+  let i = 0;
+
+  setInterval(() => {
+    slides.forEach(s => s.classList.remove("active"));
+    i = (i + 1) % slides.length;
+    slides[i].classList.add("active");
+  }, 2000);
+}
+
+/* HEARTS */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.classList.add("heart");
+  heart.innerText = "💗";
+  heart.style.left = Math.random()*100 + "vw";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}, 300);
+</script>
+
+</body>
+</html>
