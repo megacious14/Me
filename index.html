@@ -5,95 +5,81 @@
 <title>For You 🧸💗</title>
 
 <style>
-body {
+/* RESET */
+html, body {
   margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
   font-family: Arial, sans-serif;
   color: white;
-  text-align: center;
-  overflow: hidden;
-  height: 100vh;
 }
 
-/* FULL BACKGROUND FIX */
+/* ✅ FULL SCREEN BACKGROUND FIX (REAL FIX) */
+body {
+  background: black;
+}
+
 body::before {
   content: "";
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: url("IMG_3907.jpeg") no-repeat center center/cover;
-  filter: blur(7px) brightness(0.4);
+  inset: 0;
+  background: url("IMG_3907.jpeg") no-repeat center center / cover;
+  filter: blur(6px) brightness(0.35);
+  transform: scale(1.05);
   z-index: -1;
 }
 
-/* PAGES */
+/* PAGE */
 .container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
   padding: 40px;
+  box-sizing: border-box;
   opacity: 0;
-  transition: opacity 1s ease;
+  transition: opacity 0.8s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .show {
   opacity: 1;
 }
 
-/* INPUT */
-input {
-  padding: 14px;
-  border-radius: 15px;
-  border: none;
-  text-align: center;
-  font-size: 16px;
+/* 🔤 MAKE TEXT CLEAR */
+h1, h2, p {
+  text-shadow: 0 2px 10px black;
 }
 
-/* TEXT */
 h2 {
-  font-size: 28px;
+  font-size: 32px;
 }
 
 p {
   font-size: 22px;
+  max-width: 800px;
   line-height: 1.8;
+}
+
+/* INPUT */
+input {
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-size: 16px;
+  text-align: center;
 }
 
 /* TAP */
 .tap {
-  position: fixed;
+  position: absolute;
   bottom: 20px;
-  width: 100%;
   opacity: 0.6;
   font-size: 14px;
 }
-
-/* CURSOR */
-#cursor {
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%,100%{opacity:1;}
-  50%{opacity:0;}
-}
-
-/* GLOW */
-.glow {
-  animation: glow 2s ease forwards;
-}
-
-@keyframes glow {
-  100% {text-shadow: 0 0 20px pink;}
-}
-
-/* SHAKE */
-@keyframes shake {
-  0% {transform: translateX(0);}
-  25% {transform: translateX(-10px);}
-  50% {transform: translateX(10px);}
-  75% {transform: translateX(-10px);}
-  100% {transform: translateX(0);}
-}
-.shake { animation: shake 0.4s; }
 
 /* HEARTS */
 .heart {
@@ -106,12 +92,33 @@ p {
   to {transform: translateY(-10vh);}
 }
 
-/* SLIDESHOW CENTER */
+/* SHAKE */
+@keyframes shake {
+  0% {transform: translateX(0);}
+  25% {transform: translateX(-10px);}
+  50% {transform: translateX(10px);}
+  75% {transform: translateX(-10px);}
+  100% {transform: translateX(0);}
+}
+.shake { animation: shake 0.4s; }
+
+/* CURSOR */
+#cursor {
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% {opacity: 0;}
+}
+
+/* 🎞️ SLIDESHOW FIX */
 .slide {
   display: none;
-  width: 300px;
+  width: 320px;
+  height: 320px;
+  object-fit: cover;
   border-radius: 20px;
-  margin: auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
 }
 
 .active {
@@ -122,38 +129,37 @@ p {
 
 <body>
 
-<!-- MUSIC -->
 <audio id="music" loop>
   <source src="song.mp3" type="audio/mpeg">
 </audio>
 
+<!-- START -->
 <div class="container show" id="start">
   <h1>For You 🧸💗</h1>
   <p class="tap">tap to begin</p>
 </div>
 
+<!-- CODE -->
 <div class="container" id="codeScreen">
   <h2>Enter our code 💗</h2>
-  <p style="opacity:0.6;">hint: when we started dating…</p>
+  <p style="opacity:0.7;">hint: when we started dating…</p>
   <input type="password" id="codeInput">
 </div>
 
+<!-- COUNTDOWN -->
 <div class="container" id="countdown">
   <h2>We've been together for 💗</h2>
   <p id="time"></p>
   <p class="tap">tap to continue</p>
 </div>
 
-<!-- MESSAGE (EMPTY READY FOR YOUR TEXT) -->
+<!-- MESSAGE -->
 <div class="container" id="message">
   <h2>💌</h2>
-
-  <p id="typedText" style="max-width:800px; margin:auto; font-size:22px;"></p>
-
-  <p class="tap" id="tapAfterMessage" style="display:none;">tap to continue</p>
+  <p id="typedText"></p>
 </div>
 
-<!-- SLIDESHOW -->
+<!-- SLIDESHOW (FIXED) -->
 <div class="container" id="gallery">
   <h2>Us 💗</h2>
 
@@ -175,33 +181,33 @@ p {
 
   <iframe style="border-radius:12px"
     src="https://open.spotify.com/embed/playlist/5pMJjbRnQiTY3k4cPpTSF2"
-    width="100%" height="380"
+    width="90%" height="380"
     frameBorder="0"
     allow="autoplay; encrypted-media">
   </iframe>
 
-  <p class="glow">Forever us 💗</p>
+  <p>Forever us 💗</p>
 </div>
 
 <script>
 let current = "start";
 
-/* MUSIC FADE */
+/* MUSIC */
 function playMusic() {
-  let music = document.getElementById("music");
-  music.volume = 0;
-  music.play();
+  let m = document.getElementById("music");
+  m.volume = 0;
+  m.play();
 
   let v = 0;
   let fade = setInterval(() => {
     if (v < 1) {
       v += 0.05;
-      music.volume = v;
+      m.volume = v;
     } else clearInterval(fade);
   }, 200);
 }
 
-/* NAVIGATION */
+/* NAV */
 function goTo(id) {
   document.getElementById(current).classList.remove("show");
 
@@ -220,55 +226,65 @@ document.body.addEventListener("click", () => {
     playMusic();
     goTo("codeScreen");
   }
-  else if (current === "countdown") goTo("message");
-  else if (current === "gallery") goTo("playlist");
-  else if (current === "message" && typingDone) goTo("gallery");
-});
-
-/* PASSWORD */
-document.getElementById("codeInput").addEventListener("keypress", function(e){
-  if (e.key === "Enter") {
-    if (this.value === "18thmarch") {
+  else if (current === "codeScreen") {
+    if (document.getElementById("codeInput").value === "18thmarch") {
       goTo("countdown");
     } else {
       document.body.classList.add("shake");
       setTimeout(() => document.body.classList.remove("shake"), 400);
     }
   }
+  else if (current === "countdown") goTo("message");
+  else if (current === "message") goTo("gallery");
+  else if (current === "gallery") goTo("playlist");
 });
 
 /* COUNTDOWN */
 let startDate = new Date("March 18, 2026");
 
 setInterval(() => {
-  let diff = new Date() - startDate;
-  let d = Math.floor(diff / 86400000);
-  let h = Math.floor((diff / 3600000) % 24);
-  let m = Math.floor((diff / 60000) % 60);
-
-  document.getElementById("time").innerHTML =
-    d + " days, " + h + " hrs, " + m + " mins 💗";
+  let d = Math.floor((new Date() - startDate) / 86400000);
+  document.getElementById("time").innerHTML = d + " days 💗";
 }, 1000);
 
-/* TYPING (PASTE YOUR MESSAGE HERE) */
+/* TYPING */
 const text = `Dear bear🧸💗,
-i really don’t know how to even start😭 but i love love you soooooo muchhhhhhh. I love when you’re happy, i love your eyes, your smile, your laughter, i love your height, i love every single thing about you. i love how you feel sometimes feel a bit awkward and you feel like i wouldn’t understand you but it makes you the cutest honestly and i tell you to not be shy🙃… i love how smart you are! and i am going to love every single moment of yours, your happy times as well as your sad times but i pray and hope you’re happy all the time🥹🥹🥹💗… i’m actually allowing myself to be loved and i’m going to love you through and through!💗💗 you may not know but you make me really happy and sometimes i think this is not real and im going to love you always Nana Wiredu Gyan🥹💗 and i know we’ll last forever 🙃🙃💗 It's so rare to find a someone like you, somehow when you're around,the sky is always blue,the way we talk, the things you say the way you make it all okay and how you know all of my jokes but  you laugh anyway… if I could wish for one thing I'd take the smile that you bring
+i really don’t know how to even start😭 but i love love you soooooo 
+muchhhhhhh. I love when you’re happy, i love your eyes, your smile, 
+your laughter,
+i love your height, i love every single thing about you. 
+i love how you feel sometimes feel a bit awkward and you feel like 
+i wouldn’t understand you but it makes you the cutest honestly 
+and i tell you to not be shy🙃… i love how smart you are! and 
+i am going to love every single moment of yours, your happy 
+times as well as your sad times but i pray and hope you’re happy 
+all the 
+time🥹🥹🥹💗… i’m actually allowing myself to be loved and 
+i’m going to love you 
+through and through!💗💗 you may not know but you make me really 
+happy and sometimes 
+i think this is not real and im going to love you always Nana Wiredu Gyan🥹💗 and 
+i know we’ll 
+last forever 🙃🙃💗 It's so rare to find a someone like you, somehow when you're
+around,the 
+sky is always blue,the way we talk, the things you say the way you make it 
+all okay and how you 
+know all of my jokes but  you laugh anyway… if I could wish for one thing I'd take 
+the smile 
+that you bring
 Wherever you go in this world I'll come along
 Together we dream the same dream
 Forever I'm here for you, you're here for me
 Happy One Month Anniversary!!💗`;
 
 let i = 0;
-let typingDone = false;
 let sound = new Audio("typing.mp3");
+let typingDone = false;
 
 function startTyping() {
   let el = document.getElementById("typedText");
-  let tap = document.getElementById("tapAfterMessage");
-
   el.innerHTML = "";
   i = 0;
-  typingDone = false;
 
   function type() {
     if (i < text.length) {
@@ -277,14 +293,25 @@ function startTyping() {
 
       el.innerHTML = text.substring(0, i + 1) + '<span id="cursor">|</span>';
       i++;
-      setTimeout(type, 15);
+      setTimeout(type, 18);
     } else {
       typingDone = true;
-      tap.style.display = "block";
     }
   }
 
   type();
+}
+
+/* SLIDESHOW FIX */
+function startSlideshow() {
+  let slides = document.querySelectorAll(".slide");
+  let index = 0;
+
+  setInterval(() => {
+    slides.forEach(s => s.classList.remove("active"));
+    index = (index + 1) % slides.length;
+    slides[index].classList.add("active");
+  }, 2000);
 }
 
 /* HEARTS */
@@ -296,19 +323,6 @@ setInterval(() => {
   document.body.appendChild(h);
   setTimeout(() => h.remove(), 6000);
 }, 500);
-
-/* SLIDESHOW */
-let slideIndex = 0;
-
-function startSlideshow() {
-  let slides = document.querySelectorAll(".slide");
-
-  setInterval(() => {
-    slides.forEach(s => s.classList.remove("active"));
-    slideIndex = (slideIndex + 1) % slides.length;
-    slides[slideIndex].classList.add("active");
-  }, 2000);
-}
 </script>
 
 </body>
