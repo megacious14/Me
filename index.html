@@ -11,16 +11,19 @@ body {
   color: white;
   text-align: center;
   overflow: hidden;
+  height: 100vh;
 }
 
-/* BACKGROUND IMAGE */
+/* FULL BACKGROUND FIX */
 body::before {
   content: "";
   position: fixed;
-  width: 100%;
-  height: 100%;
-  background: url("IMG_3907.jpeg") no-repeat center/cover;
-  filter: blur(8px) brightness(0.4);
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url("IMG_3907.jpeg") no-repeat center center/cover;
+  filter: blur(7px) brightness(0.4);
   z-index: -1;
 }
 
@@ -37,20 +40,24 @@ body::before {
 
 /* INPUT */
 input {
-  padding: 12px;
+  padding: 14px;
   border-radius: 15px;
   border: none;
   text-align: center;
+  font-size: 16px;
 }
 
-/* IMAGES */
-img {
-  width: 220px;
-  border-radius: 20px;
-  margin: 10px;
+/* TEXT */
+h2 {
+  font-size: 28px;
 }
 
-/* TAP TEXT */
+p {
+  font-size: 22px;
+  line-height: 1.8;
+}
+
+/* TAP */
 .tap {
   position: fixed;
   bottom: 20px;
@@ -69,13 +76,12 @@ img {
   50%{opacity:0;}
 }
 
-/* GLOW EFFECT */
+/* GLOW */
 .glow {
   animation: glow 2s ease forwards;
 }
 
 @keyframes glow {
-  0% {text-shadow: none;}
   100% {text-shadow: 0 0 20px pink;}
 }
 
@@ -87,10 +93,7 @@ img {
   75% {transform: translateX(-10px);}
   100% {transform: translateX(0);}
 }
-
-.shake {
-  animation: shake 0.4s;
-}
+.shake { animation: shake 0.4s; }
 
 /* HEARTS */
 .heart {
@@ -101,6 +104,18 @@ img {
 @keyframes float {
   from {transform: translateY(100vh);}
   to {transform: translateY(-10vh);}
+}
+
+/* SLIDESHOW CENTER */
+.slide {
+  display: none;
+  width: 300px;
+  border-radius: 20px;
+  margin: auto;
+}
+
+.active {
+  display: block;
 }
 </style>
 </head>
@@ -129,25 +144,32 @@ img {
   <p class="tap">tap to continue</p>
 </div>
 
+<!-- MESSAGE (EMPTY READY FOR YOUR TEXT) -->
 <div class="container" id="message">
   <h2>💌</h2>
-  <p id="typedText"></p>
+
+  <p id="typedText" style="max-width:800px; margin:auto; font-size:22px;"></p>
+
   <p class="tap" id="tapAfterMessage" style="display:none;">tap to continue</p>
 </div>
 
+<!-- SLIDESHOW -->
 <div class="container" id="gallery">
   <h2>Us 💗</h2>
-  <img src="IMG_3908.jpeg">
-  <img src="IMG_3909.jpeg">
-  <img src="IMG_3910.jpeg">
-  <img src="IMG_3912.jpeg">
-  <img src="IMG_3913.jpeg">
-  <img src="IMG_3926.jpeg">
-  <img src="IMG_3927.jpeg">
-  <img src="IMG_3928.jpeg">
+
+  <img class="slide active" src="IMG_3908.jpeg">
+  <img class="slide" src="IMG_3909.jpeg">
+  <img class="slide" src="IMG_3910.jpeg">
+  <img class="slide" src="IMG_3912.jpeg">
+  <img class="slide" src="IMG_3913.jpeg">
+  <img class="slide" src="IMG_3926.jpeg">
+  <img class="slide" src="IMG_3927.jpeg">
+  <img class="slide" src="IMG_3928.jpeg">
+
   <p class="tap">tap for final surprise</p>
 </div>
 
+<!-- PLAYLIST -->
 <div class="container" id="playlist">
   <h2>Our Playlist 🎶</h2>
 
@@ -164,17 +186,17 @@ img {
 <script>
 let current = "start";
 
-/* MUSIC FADE IN */
+/* MUSIC FADE */
 function playMusic() {
   let music = document.getElementById("music");
   music.volume = 0;
   music.play();
 
-  let vol = 0;
+  let v = 0;
   let fade = setInterval(() => {
-    if (vol < 1) {
-      vol += 0.05;
-      music.volume = vol;
+    if (v < 1) {
+      v += 0.05;
+      music.volume = v;
     } else clearInterval(fade);
   }, 200);
 }
@@ -188,6 +210,7 @@ function goTo(id) {
     current = id;
 
     if (id === "message") startTyping();
+    if (id === "gallery") startSlideshow();
   }, 500);
 }
 
@@ -227,13 +250,12 @@ setInterval(() => {
     d + " days, " + h + " hrs, " + m + " mins 💗";
 }, 1000);
 
-/* TYPING EFFECT */
+/* TYPING (PASTE YOUR MESSAGE HERE) */
 const text = `Dear bear🧸💗,
-
-i really don’t know how to even start😭 but i love love you soooooo muchhhhhhh...
-
-you make me really happy and im going to love you always Nana Wiredu Gyan🥹💗
-
+i really don’t know how to even start😭 but i love love you soooooo muchhhhhhh. I love when you’re happy, i love your eyes, your smile, your laughter, i love your height, i love every single thing about you. i love how you feel sometimes feel a bit awkward and you feel like i wouldn’t understand you but it makes you the cutest honestly and i tell you to not be shy🙃… i love how smart you are! and i am going to love every single moment of yours, your happy times as well as your sad times but i pray and hope you’re happy all the time🥹🥹🥹💗… i’m actually allowing myself to be loved and i’m going to love you through and through!💗💗 you may not know but you make me really happy and sometimes i think this is not real and im going to love you always Nana Wiredu Gyan🥹💗 and i know we’ll last forever 🙃🙃💗 It's so rare to find a someone like you, somehow when you're around,the sky is always blue,the way we talk, the things you say the way you make it all okay and how you know all of my jokes but  you laugh anyway… if I could wish for one thing I'd take the smile that you bring
+Wherever you go in this world I'll come along
+Together we dream the same dream
+Forever I'm here for you, you're here for me
 Happy One Month Anniversary!!💗`;
 
 let i = 0;
@@ -259,7 +281,6 @@ function startTyping() {
     } else {
       typingDone = true;
       tap.style.display = "block";
-      el.classList.add("glow");
     }
   }
 
@@ -275,6 +296,19 @@ setInterval(() => {
   document.body.appendChild(h);
   setTimeout(() => h.remove(), 6000);
 }, 500);
+
+/* SLIDESHOW */
+let slideIndex = 0;
+
+function startSlideshow() {
+  let slides = document.querySelectorAll(".slide");
+
+  setInterval(() => {
+    slides.forEach(s => s.classList.remove("active"));
+    slideIndex = (slideIndex + 1) % slides.length;
+    slides[slideIndex].classList.add("active");
+  }, 2000);
+}
 </script>
 
 </body>
